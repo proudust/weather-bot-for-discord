@@ -9,7 +9,7 @@ function GenelateDiscordPayload(
   forecast: DarkSky.DarkSkyApiResponse
 ): Discord.DiscordWebhookPayload {
   const daily = forecast.daily.data[numberOfDays];
-  const date = new Date(daily.time);
+  const date = new Date(daily.time * 1000);
 
   return {
     embeds: [
