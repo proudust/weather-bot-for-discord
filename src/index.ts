@@ -1,3 +1,5 @@
+import * as Discord from './discord';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare var global: any;
 
@@ -46,8 +48,7 @@ global.PostWearherToDiscord = (): void => {
   }
 
   // post to discord
-  const posturl = PropertiesService.getScriptProperties().getProperty('WEBHOOK');
-  const payload = {
+  const payload: Discord.DiscordWebhookPayload = {
     embeds: [
       {
         title: `${date.getMonth() + 1}月${date.getDate()}日の天気`,
@@ -72,17 +73,5 @@ global.PostWearherToDiscord = (): void => {
       }
     ]
   };
-  // eslint-disable-next-line @typescript-eslint/camelcase
-  const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
-    method: 'post',
-    contentType: 'application/json;multipart/form-data;application/x-www-form-urlencoded',
-    payload: JSON.stringify(payload)
-  };
-
-  try {
-    UrlFetchApp.fetch(posturl, options);
-  } catch (error) {
-    Logger.log(JSON.stringify(error));
-    return;
-  }
+  Discord.PostToDiscord(payload);
 };
