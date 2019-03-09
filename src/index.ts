@@ -4,19 +4,14 @@ import * as Discord from './discord';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare var global: any;
 
-global.PostWearherToDiscord = (): void => {
-  // access darksky api
-  const content = DarkSky.GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
+function GenelateDiscordPayload(
+  numberOfDays: number,
+  forecast: DarkSky.DarkSkyApiResponse
+): Discord.DiscordWebhookPayload {
+  const daily = forecast.daily.data[numberOfDays];
+  const date = new Date(daily.time);
 
-  const daily = content.daily.data.filter(x => {
-    const now = new Date();
-    const noon = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    return x.time >= noon.getTime() / 1000;
-  })[0];
-  const date = new Date(daily.time * 1000);
-
-  // post to discord
-  const payload: Discord.DiscordWebhookPayload = {
+  return {
     embeds: [
       {
         title: `${date.getMonth() + 1}月${date.getDate()}日の天気`,
@@ -41,5 +36,10 @@ global.PostWearherToDiscord = (): void => {
       }
     ]
   };
+}
+
+global.PostWearherToDiscord = (): void => {
+  const forecast = DarkSky.GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
+  const payload = GenelateDiscordPayload(0, forecast);
   Discord.PostToDiscord(payload);
 };
