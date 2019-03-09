@@ -41,6 +41,7 @@ function GenelateDiscordPayload(
       {
         title: `${date.getMonth() + 1}月${date.getDate()}日の天気`,
         description: `**${daily.summary}**`,
+        url: `https://darksky.net/forecast/${forecast.latitude},${forecast.longitude}/si12/ja`,
         fields: [
           {
             name: '最高気温',
