@@ -31,6 +31,11 @@ function GenelateDiscordPayload(
             name: '湿度',
             value: `${Math.round(daily.humidity * 100)}% `,
             inline: true
+          },
+          {
+            name: '降水確率',
+            value: `${Math.round(daily.precipProbability * 100)}% `,
+            inline: true
           }
         ]
       }
