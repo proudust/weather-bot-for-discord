@@ -38,8 +38,14 @@ function GenelateDiscordPayload(
   };
 }
 
-global.PostWearherToDiscord = (): void => {
+global.PostToDayWearherToDiscord = (): void => {
   const forecast = DarkSky.GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
   const payload = GenelateDiscordPayload(0, forecast);
+  Discord.PostToDiscord(payload);
+};
+
+global.PostNextDayWearherToDiscord = (): void => {
+  const forecast = DarkSky.GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
+  const payload = GenelateDiscordPayload(1, forecast);
   Discord.PostToDiscord(payload);
 };
