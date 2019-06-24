@@ -64,7 +64,7 @@ export interface DarkSkyApiResponse {
 
 export function GetWearherForecastToDarkSkyApi(
   latitude: number,
-  longitude: number
+  longitude: number,
 ): DarkSkyApiResponse {
   const key = PropertiesService.getScriptProperties().getProperty('SECRETKEY');
   const exclude = ['currently', 'minutely', 'hourly', 'flags'].join(',');

@@ -1,8 +1,7 @@
 import * as DarkSky from './darksky';
 import * as Discord from './discord';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-declare var global: any;
+declare var global: { [key: string]: Function };
 
 const wearherIconUrl: { [index in DarkSky.DarkSkyIcon]: string } = {
   'clear-day':
@@ -24,12 +23,12 @@ const wearherIconUrl: { [index in DarkSky.DarkSkyIcon]: string } = {
   'partly-cloudy-day':
     'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png',
   'partly-cloudy-night':
-    'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png'
+    'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png',
 };
 
 function GenelateDiscordPayload(
   numberOfDays: number,
-  forecast: DarkSky.DarkSkyApiResponse
+  forecast: DarkSky.DarkSkyApiResponse,
 ): Discord.DiscordWebhookPayload {
   const daily = forecast.daily.data[numberOfDays];
   const date = new Date(daily.time * 1000);
@@ -46,26 +45,26 @@ function GenelateDiscordPayload(
           {
             name: '最高気温',
             value: `${daily.temperatureMax}℃`,
-            inline: true
+            inline: true,
           },
           {
             name: '最低気温',
             value: `${daily.temperatureMin} ℃`,
-            inline: true
+            inline: true,
           },
           {
             name: '湿度',
             value: `${Math.round(daily.humidity * 100)}% `,
-            inline: true
+            inline: true,
           },
           {
             name: '降水確率',
             value: `${Math.round(daily.precipProbability * 100)}% `,
-            inline: true
-          }
-        ]
-      }
-    ]
+            inline: true,
+          },
+        ],
+      },
+    ],
   };
 }
 
