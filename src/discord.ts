@@ -35,6 +35,10 @@ export interface DiscordWebhookPayload {
 
 export function PostToDiscord(payload: DiscordWebhookPayload): void {
   const url = PropertiesService.getScriptProperties().getProperty('WEBHOOK');
+  if (!url) {
+    Logger.log('WEBHOOK is not found.');
+    return;
+  }
   // eslint-disable-next-line @typescript-eslint/camelcase
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
     method: 'post',
