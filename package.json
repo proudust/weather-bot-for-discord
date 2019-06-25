@@ -4,7 +4,7 @@
   "private": true,
   "description": "This get weather forecast from Dark Sky API, and post it to Discord. It works with Google App Script.",
   "scripts": {
-    "lint": "eslint --fix src/**/*.ts",
+    "lint": "eslint --ignore-path .gitignore --ext .js,.ts --fix .",
     "test": "jest",
     "build": "npm run lint && npm run test && rimraf dist && webpack && cpx src/appsscript.json dist",
     "deploy": "npm run build && clasp push"
@@ -38,12 +38,8 @@
     "webpack-cli": "3.3.5"
   },
   "jest": {
-    "testRegex": "(src/.+(\\.|/)(test|spec))\\.(js|ts)$",
-    "moduleFileExtensions": [
-      "ts",
-      "js",
-      "json",
-      "node"
-    ]
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
   }
 }
