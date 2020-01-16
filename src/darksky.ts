@@ -72,12 +72,16 @@ export function GetWearherForecastToDarkSkyApi(
   const units = 'si';
   const apiurl = `https://api.darksky.net/forecast/${key}/${latitude},${longitude}?exclude=${exclude}&lang=${lang}&units=${units}`;
 
-  try {
-    const responseJson = UrlFetchApp.fetch(apiurl).getContentText('UTF-8');
-    const response: DarkSkyApiResponse = JSON.parse(responseJson);
-    return response;
-  } catch (error) {
-    Logger.log(JSON.stringify(error));
-    throw error;
+  const errors: Error[] = [];
+  for (let i = 0; i < 3; i++) {
+    try {
+      const responseJson = UrlFetchApp.fetch(apiurl).getContentText('UTF-8');
+      const response: DarkSkyApiResponse = JSON.parse(responseJson);
+      return response;
+    } catch (error) {
+      errors.push(error);
+      Logger.log(JSON.stringify(error));
+    }
   }
+  throw errors;
 }
