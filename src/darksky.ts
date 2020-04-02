@@ -1,4 +1,6 @@
-export type DarkSkyIcon =
+import type { WeatherForecastSource } from './WeatherForecastSource';
+
+type DarkSkyIcon =
   | 'clear-day'
   | 'clear-night'
   | 'rain'
@@ -10,7 +12,7 @@ export type DarkSkyIcon =
   | 'partly-cloudy-day'
   | 'partly-cloudy-night';
 
-export interface DarkSkyApiResponse {
+interface DarkSkyApiResponse {
   latitude: number;
   longitude: number;
   timezone: string;
@@ -85,3 +87,42 @@ export function GetWearherForecastToDarkSkyApi(
   }
   throw errors;
 }
+
+const wearherIconUrl: { [key in DarkSkyIcon]: string } = {
+  'clear-day':
+    'https://1.bp.blogspot.com/-kcV5lUNVWjk/U9y_l53j6tI/AAAAAAAAjfc/ksZGpirKWfM/s150/tenki_mark01_hare.png',
+  'clear-night':
+    'https://2.bp.blogspot.com/-G0CvtIOQG3E/U9y_quu2IvI/AAAAAAAAjgs/VSRUWB4o9CQ/s150/tenki_mark12_tsuki.png',
+  rain:
+    'https://2.bp.blogspot.com/-120u1M2QEG8/U9y_mbeQkyI/AAAAAAAAjfk/St-jEzWtD4I/s150/tenki_mark02_ame.png',
+  snow:
+    'https://4.bp.blogspot.com/-K6V3exUfXFk/U9y_pCc1rKI/AAAAAAAAjgQ/IfF_XxmCEy0/s150/tenki_mark08_yuki.png',
+  sleet:
+    'https://2.bp.blogspot.com/-120u1M2QEG8/U9y_mbeQkyI/AAAAAAAAjfk/St-jEzWtD4I/s150/tenki_mark02_ame.png',
+  wind:
+    'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png',
+  fog:
+    'https://3.bp.blogspot.com/-cxYF1nh7jgQ/WOdEAeCvVEI/AAAAAAABDng/JSPTXndnhJEL5qh67Zq5N9Tz12X6svdMQCLcB/s400/yama_kiri.png',
+  cloudy:
+    'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png',
+  'partly-cloudy-day':
+    'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png',
+  'partly-cloudy-night':
+    'https://4.bp.blogspot.com/-22AkJ4RfDx8/U9y_noGiRSI/AAAAAAAAjf4/SeSbXunubXQ/s150/tenki_mark05_kumori.png',
+};
+
+export const getForecast: WeatherForecastSource = day => {
+  const forecast = GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
+  const daily = forecast.daily.data[day === 'today' ? 0 : 1];
+  const date = new Date(daily.time * 1000);
+  return {
+    date,
+    avatar: wearherIconUrl[daily.icon],
+    summary: daily.summary,
+    url: `https://darksky.net/forecast/${forecast.latitude},${forecast.longitude}/si12/ja`,
+    temperatureMax: daily.temperatureMax,
+    temperatureMin: daily.temperatureMin,
+    humidity: Math.round(daily.humidity * 100),
+    precipProbability: Math.round(daily.precipProbability * 100),
+  };
+};

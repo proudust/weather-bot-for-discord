@@ -1,4 +1,6 @@
-export interface DiscordWebhookPayload {
+import type { WeatherForecast } from './WeatherForecastSource';
+
+interface DiscordWebhookPayload {
   username?: string;
   avatar_url?: string;
   content?: string;
@@ -33,11 +35,49 @@ export interface DiscordWebhookPayload {
   ];
 }
 
-export function PostToDiscord(payload: DiscordWebhookPayload): void {
+export function convert(forecast: WeatherForecast): DiscordWebhookPayload {
+  const month = forecast.date.getMonth() + 1;
+  const day = forecast.date.getDate();
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    avatar_url: forecast.avatar,
+    embeds: [
+      {
+        title: `${month}月${day}日の天気`,
+        description: `**${forecast.summary}**`,
+        url: forecast.url,
+        fields: [
+          {
+            name: '最高気温',
+            value: `${forecast.temperatureMax}℃`,
+            inline: true,
+          },
+          {
+            name: '最低気温',
+            value: `${forecast.temperatureMin} ℃`,
+            inline: true,
+          },
+          {
+            name: '湿度',
+            value: `${forecast.humidity}% `,
+            inline: true,
+          },
+          {
+            name: '降水確率',
+            value: `${forecast.precipProbability}% `,
+            inline: true,
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export function post(payload: DiscordWebhookPayload): void {
   const url = PropertiesService.getScriptProperties().getProperty('WEBHOOK');
   if (!url) {
-    Logger.log('WEBHOOK is not found.');
-    return;
+    throw new Error('WEBHOOK is not found.');
   }
   // eslint-disable-next-line @typescript-eslint/camelcase
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
@@ -45,10 +85,5 @@ export function PostToDiscord(payload: DiscordWebhookPayload): void {
     contentType: 'application/json;multipart/form-data;application/x-www-form-urlencoded',
     payload: JSON.stringify(payload),
   };
-  try {
-    UrlFetchApp.fetch(url, options);
-  } catch (error) {
-    Logger.log(JSON.stringify(error));
-    return;
-  }
+  UrlFetchApp.fetch(url, options);
 }
