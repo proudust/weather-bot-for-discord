@@ -1,3 +1,4 @@
+import { retry } from './util';
 import type { WeatherForecastSource } from './WeatherForecastSource';
 
 type DarkSkyIcon =
@@ -64,28 +65,18 @@ interface DarkSkyApiResponse {
   offset: number;
 }
 
-export function GetWearherForecastToDarkSkyApi(
-  latitude: number,
-  longitude: number,
-): DarkSkyApiResponse {
+function GetWearherForecastToDarkSkyApi(latitude: number, longitude: number): DarkSkyApiResponse {
   const key = PropertiesService.getScriptProperties().getProperty('SECRETKEY');
   const exclude = ['currently', 'minutely', 'hourly', 'flags'].join(',');
   const lang = 'ja';
   const units = 'si';
   const apiurl = `https://api.darksky.net/forecast/${key}/${latitude},${longitude}?exclude=${exclude}&lang=${lang}&units=${units}`;
 
-  const errors: Error[] = [];
-  for (let i = 0; i < 3; i++) {
-    try {
-      const responseJson = UrlFetchApp.fetch(apiurl).getContentText('UTF-8');
-      const response: DarkSkyApiResponse = JSON.parse(responseJson);
-      return response;
-    } catch (error) {
-      errors.push(error);
-      Logger.log(JSON.stringify(error));
-    }
-  }
-  throw errors;
+  return retry(3, () => {
+    const responseJson = UrlFetchApp.fetch(apiurl).getContentText('UTF-8');
+    const response: DarkSkyApiResponse = JSON.parse(responseJson);
+    return response;
+  });
 }
 
 const wearherIconUrl: { [key in DarkSkyIcon]: string } = {
