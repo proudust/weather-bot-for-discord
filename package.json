@@ -5,9 +5,11 @@
   "description": "This get weather forecast from Dark Sky API, and post it to Discord. It works with Google App Script.",
   "scripts": {
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts --fix .",
+    "lint:ci": "eslint --ignore-path .gitignore --ext .js,.ts .",
     "test": "jest",
-    "build": "npm run lint && npm run test && rimraf dist && webpack && cpy src/appsscript.json dist",
-    "deploy": "npm run build && clasp push"
+    "test:ci": "jest --ci",
+    "build": "rimraf dist && webpack && cpy src/appsscript.json dist",
+    "deploy": "clasp push"
   },
   "repository": {
     "type": "git",
