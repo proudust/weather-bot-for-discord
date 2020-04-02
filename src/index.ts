@@ -1,7 +1,7 @@
 import * as DarkSky from './darksky';
 import * as Discord from './discord';
 
-declare var global: { [key: string]: Function };
+declare let global: { [key: string]: Function };
 
 const wearherIconUrl: { [index in DarkSky.DarkSkyIcon]: string } = {
   'clear-day':
