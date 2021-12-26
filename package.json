@@ -11,7 +11,7 @@
     "lint:deno-lint": "deno lint --config deno.jsonc",
     "lint:deno-fmt": "deno fmt --check --config deno.jsonc",
     "test": "run-p -l -c --aggregate-output lint:*",
-    "build": "rimraf dist && webpack && cpy src/appsscript.json dist",
+    "build": "deno run --allow-read --allow-env --allow-net --allow-write --allow-run --no-check=remote build.ts",
     "deploy": "clasp push"
   },
   "repository": {
