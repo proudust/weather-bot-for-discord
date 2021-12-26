@@ -35,21 +35,23 @@ export interface DiscordWebhookPayload {
   ];
 }
 
-export function PostToDiscord(payload: DiscordWebhookPayload): void {
-  const url = PropertiesService.getScriptProperties().getProperty("WEBHOOK");
+export async function post(payload: DiscordWebhookPayload): Promise<void> {
+  const url = Deno.env.get("WEBHOOK");
   if (!url) {
-    Logger.log("WEBHOOK is not found.");
+    console.log("WEBHOOK is not found.");
     return;
   }
-  const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
-    method: "post",
-    contentType: "application/json;multipart/form-data;application/x-www-form-urlencoded",
-    payload: JSON.stringify(payload),
-  };
+
   try {
-    UrlFetchApp.fetch(url, options);
-  } catch (error) {
-    Logger.log(JSON.stringify(error));
-    return;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json;",
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch (error: unknown) {
+    console.log(error);
+    throw error;
   }
 }
