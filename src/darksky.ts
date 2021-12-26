@@ -1,14 +1,16 @@
+/// <reference path="https://raw.githubusercontent.com/proudust/deno-gas-types/main/types/index.d.ts" />
+
 export type DarkSkyIcon =
-  | 'clear-day'
-  | 'clear-night'
-  | 'rain'
-  | 'snow'
-  | 'sleet'
-  | 'wind'
-  | 'fog'
-  | 'cloudy'
-  | 'partly-cloudy-day'
-  | 'partly-cloudy-night';
+  | "clear-day"
+  | "clear-night"
+  | "rain"
+  | "snow"
+  | "sleet"
+  | "wind"
+  | "fog"
+  | "cloudy"
+  | "partly-cloudy-day"
+  | "partly-cloudy-night";
 
 export interface DarkSkyApiResponse {
   latitude: number;
@@ -56,7 +58,7 @@ export interface DarkSkyApiResponse {
       apparentTemperatureMinTime: number;
       apparentTemperatureMax: number;
       apparentTemperatureMaxTime: number;
-      precipType?: 'rain' | 'snow' | 'sleet';
+      precipType?: "rain" | "snow" | "sleet";
     }[];
   };
   offset: number;
@@ -66,16 +68,17 @@ export function GetWearherForecastToDarkSkyApi(
   latitude: number,
   longitude: number,
 ): DarkSkyApiResponse {
-  const key = PropertiesService.getScriptProperties().getProperty('SECRETKEY');
-  const exclude = ['currently', 'minutely', 'hourly', 'flags'].join(',');
-  const lang = 'ja';
-  const units = 'si';
-  const apiurl = `https://api.darksky.net/forecast/${key}/${latitude},${longitude}?exclude=${exclude}&lang=${lang}&units=${units}`;
+  const key = PropertiesService.getScriptProperties().getProperty("SECRETKEY");
+  const exclude = ["currently", "minutely", "hourly", "flags"].join(",");
+  const lang = "ja";
+  const units = "si";
+  const apiurl =
+    `https://api.darksky.net/forecast/${key}/${latitude},${longitude}?exclude=${exclude}&lang=${lang}&units=${units}`;
 
   const errors: Error[] = [];
   for (let i = 0; i < 3; i++) {
     try {
-      const responseJson = UrlFetchApp.fetch(apiurl).getContentText('UTF-8');
+      const responseJson = UrlFetchApp.fetch(apiurl).getContentText("UTF-8");
       const response: DarkSkyApiResponse = JSON.parse(responseJson);
       return response;
     } catch (error) {
