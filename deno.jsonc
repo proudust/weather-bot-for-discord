@@ -1,23 +1,35 @@
 {
+  "compilerOptions": {
+    "types": [
+      "https://raw.githubusercontent.com/proudust/deno-gas-types/main/types/index.d.ts"
+    ]
+  },
   "fmt": {
     "files": {
       "exclude": [
-        ".history",
         "dist",
         "node_modules"
       ]
-    },
-    "options": {
-      "lineWidth": 100
     }
   },
   "lint": {
     "files": {
       "exclude": [
-        ".history",
         "dist",
         "node_modules"
       ]
     }
+  },
+  "test": {
+    "files": {
+      "exclude": [
+        "dist",
+        "node_modules"
+      ]
+    }
+  },
+  "tasks": {
+    "build": "deno run --allow-env --allow-net --allow-read --allow-run --allow-write _build.ts",
+    "deploy": "deno task build && deno task build deploy"
   }
 }
