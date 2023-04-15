@@ -41,7 +41,8 @@ export function PostToDiscord(payload: DiscordWebhookPayload): void {
   }
   const options: GoogleAppsScript.URL_Fetch.URLFetchRequestOptions = {
     method: "post",
-    contentType: "application/json;multipart/form-data;application/x-www-form-urlencoded",
+    contentType:
+      "application/json;multipart/form-data;application/x-www-form-urlencoded",
     payload: JSON.stringify(payload),
   };
   try {

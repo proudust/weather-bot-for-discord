@@ -40,7 +40,8 @@ function GenelateDiscordPayload(
       {
         title: `${date.getMonth() + 1}月${date.getDate()}日の天気`,
         description: `**${daily.summary}**`,
-        url: `https://darksky.net/forecast/${forecast.latitude},${forecast.longitude}/si12/ja`,
+        url:
+          `https://darksky.net/forecast/${forecast.latitude},${forecast.longitude}/si12/ja`,
         fields: [
           {
             name: "最高気温",
@@ -69,13 +70,19 @@ function GenelateDiscordPayload(
 }
 
 global.PostToDayWearherToDiscord = (): void => {
-  const forecast = DarkSky.GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
+  const forecast = DarkSky.GetWearherForecastToDarkSkyApi(
+    36.366503,
+    140.470997,
+  );
   const payload = GenelateDiscordPayload(0, forecast);
   Discord.PostToDiscord(payload);
 };
 
 global.PostNextDayWearherToDiscord = (): void => {
-  const forecast = DarkSky.GetWearherForecastToDarkSkyApi(36.366503, 140.470997);
+  const forecast = DarkSky.GetWearherForecastToDarkSkyApi(
+    36.366503,
+    140.470997,
+  );
   const payload = GenelateDiscordPayload(1, forecast);
   Discord.PostToDiscord(payload);
 };
